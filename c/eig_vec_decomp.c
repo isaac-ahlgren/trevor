@@ -82,8 +82,9 @@ void eig_decomp(float* matrix, struct eig_decomp_args* args)
     uint32_t execs = args->execs;
     float err_tol = args->err_tol;
     float err = 0;
+    int i = 0;
     
-    for (int i = 0; i < execs; i++)
+    for (i = 0; i < execs; i++)
     {
         matrix_vec_mult(mat, dim_size, eig_vec, s);
         normalize(s, dim_size);

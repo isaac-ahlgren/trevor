@@ -1,6 +1,5 @@
 from bit_extractor import Bit_Extractor
 from network import Network
-from error_codes import Error_Corrector
 import time
 import numpy as np
 
@@ -12,7 +11,6 @@ class TR_Bit_Extract_System():
         self.vector_length = vector_length
         self.net = Network(ip)
         self.be = Bit_Extractor(sample_rate, bit_length, vector_length)
-        self.corrector = Error_Corrector()
 
     def extract_context(self):
         print()
