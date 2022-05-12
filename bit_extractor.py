@@ -1,4 +1,5 @@
 from microphone import Microphone
+from bitarray import bitarray
 import ctypes
 import numpy as np
 
@@ -36,11 +37,10 @@ class Bit_Extractor:
         bits = np.zeros(len(proj_data))
         for i in range(len(proj_data)):
            if proj_data[i] > med:
-               bits[i] = 1;
+               bits[i] = 1
            else:
-               bits[i] = 0;
-        return bits
-        
+               bits[i] = 0
+        return bitarray(bits)
 
     def extract_key(self):
         data = self.microphone.get_audio()

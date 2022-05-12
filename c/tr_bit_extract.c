@@ -16,13 +16,13 @@ void* alloc_tr_bit_extract_args(uint32_t vec_len, uint32_t vec_num, uint32_t eig
     struct tr_bit_extract_args* args = malloc(sizeof(struct tr_bit_extract_args));
     
     args->f_args = alloc_fft_args(vec_len);
-    args->e_args = alloc_eig_args(vec_len, eig_execs, eig_error);
+    args->e_args = alloc_eig_args((vec_len/2 + 1), 10000, 0.01);
     args->vec_len = vec_len;
     args->vec_num = vec_num;
     args->fft_buf = malloc(sizeof(float)*(vec_len/2 + 1)*vec_num);
-    args->cov_mat = malloc(sizeof(float)*vec_len*vec_len);
-    args->cov_mat_means = malloc(sizeof(float)*vec_len);
-    args->eig_vec = malloc(sizeof(float)*vec_len);
+    args->cov_mat = malloc(sizeof(float)*(vec_len/2 + 1)*(vec_len/2 + 1));
+    args->cov_mat_means = malloc(sizeof(float)*(vec_len/2 + 1));
+    args->eig_vec = malloc(sizeof(float)*(vec_len/2 + 1));
 
     return (void*) args;
 }

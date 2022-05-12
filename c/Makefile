@@ -2,7 +2,7 @@
 
 CC = gcc
 
-CFLAGS = -g -fPIC -shared -Wall -lm -Xlinker --verbose
+CFLAGS = -g -fPIC -shared -Wall -lm
 
 LIBS = libkissfft-float.a
 

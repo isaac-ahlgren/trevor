@@ -81,12 +81,13 @@ void eig_decomp(float* matrix, struct eig_decomp_args* args)
     uint32_t dim_size = args->dim_size;
     uint32_t execs = args->execs;
     float err_tol = args->err_tol;
-
+    float err = 0;
+    
     for (int i = 0; i < execs; i++)
     {
         matrix_vec_mult(mat, dim_size, eig_vec, s);
         normalize(s, dim_size);
-        float err = l1_error(s, eig_vec, dim_size);
+        err = l1_error(s, eig_vec, dim_size);
 
         // swap the buffers for eigen vectors
         float* tmp = eig_vec;
@@ -97,7 +98,12 @@ void eig_decomp(float* matrix, struct eig_decomp_args* args)
             break;
     }
 
+    if (i == execs) {
+        printf("COULDN'T CONVERGE, Error: %e ", err);
+    }
+
     args->eig_vec = eig_vec;
+    args->s = s;
 }
 
 /*
