@@ -1,13 +1,13 @@
-from bitarray import bitarray
+
 MAX_HAMMING_DISTANCE = 8
 
 class Error_Corrector:
     def __init__(self):
         # Hamming 8-4 error codes
-        self.hamming_error_code_strings = [bitarray("00000000"), bitarray("00011110"), bitarray("00110011"), bitarray("00101101"),
-                                           bitarray("01010101"), bitarray("01001011"), bitarray("01100110"), bitarray("01111000"),
-                                           bitarray("10000111"), bitarray("10011001"), bitarray("10110100"), bitarray("10101010"),
-                                           bitarray("11010010"), bitarray("11001100"), bitarray("11100001"), bitarray("11111111")]
+        #self.hamming_error_code_strings = [bitarray("00000000"), bitarray("00011110"), bitarray("00110011"), bitarray("00101101"),
+        #                                   bitarray("01010101"), bitarray("01001011"), bitarray("01100110"), bitarray("01111000"),
+        #                                   bitarray("10000111"), bitarray("10011001"), bitarray("10110100"), bitarray("10101010"),
+        #                                   bitarray("11010010"), bitarray("11001100"), bitarray("11100001"), bitarray("11111111")]
 
     def get_nearest_hamming_code(self, bits):
         best_hamming_dist = MAX_HAMMING_DISTANCE

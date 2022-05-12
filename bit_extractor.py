@@ -1,9 +1,8 @@
 from microphone import Microphone
-from bitarray import bitarray
 import ctypes
 import numpy as np
 
-MAX_EIG_EXEC = 1000
+MAX_EIG_EXEC = 10000
 EIG_ERR = 0.01
 
 class Bit_Extractor:
@@ -40,7 +39,7 @@ class Bit_Extractor:
                bits[i] = 1
            else:
                bits[i] = 0
-        return bitarray(bits)
+        return bits
 
     def extract_key(self):
         data = self.microphone.get_audio()
