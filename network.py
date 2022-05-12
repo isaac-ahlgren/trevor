@@ -3,7 +3,7 @@ import socket
 class Network:
     def __init__(self, ip):
         self.ip = ip
-        
+
         self.broadcast_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broadcast_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.broadcast_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -21,12 +21,6 @@ class Network:
         print()
         self.broadcast_sock.sendto("start".encode(), ('<broadcast>', 5005))
 
-    def send_err_code_dist(self, err_code_diff):
-        print()
-        print("Broadcasting Error Code Difference")
-        print()
-        self.broadcast_sock.sendto(err_code_diff, ('<broadcast>', 5005))
-
     def send_auth_token(self, auth_token):
         print()
         print("Sending Authentication Token")
@@ -42,15 +36,6 @@ class Network:
             message, address = self.personal_sock.recvfrom(8)
             if message is not None:
                 break
-
-    def receive_ham_dist(self):
-        print()
-        print("Polling Hamming Distance Difference")
-        print()
-        while (1):
-            message, address = self.personal_sock.recvfrom(8)
-            if message is not None:
-                return message
 
     def receive_auth_key(self):
         print()
