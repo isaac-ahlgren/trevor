@@ -19,13 +19,13 @@ class Network:
         print()
         print("Broadcasting Start")
         print()
-        self.broadcast_sock.sendto("start".encode(), ('<broadcast>', 5005))
+        self.personal_sock.sendto("start".encode(), ('<broadcast>', 5005))
 
     def send_auth_token(self, auth_token):
         print()
         print("Sending Authentication Token")
         print()
-        self.broadcast_sock.sendto(auth_token, ('<broadcast>', 5005))
+        self.personal_sock.sendto(auth_token, ('<broadcast>', 5005))
 
     # DEVICE FUNCTIONS
     def get_start(self):
@@ -33,7 +33,7 @@ class Network:
         print("Polling For Start")
         print()
         while (1):
-            message, address = self.personal_sock.recvfrom(8)
+            message, address = self.broadcast_sock.recvfrom(8)
             if message is not None:
                 break
 
@@ -42,7 +42,7 @@ class Network:
         print("Polling For Authentication Token")
         print()
         while (1):
-            message, address = self.personal_sock.recvfrom(8)
+            message, address = self.broadcast_sock.recvfrom(8)
             if message is not None:
                 return message
 

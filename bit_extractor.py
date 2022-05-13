@@ -43,5 +43,6 @@ class Bit_Extractor:
 
     def extract_key(self):
         data = self.microphone.get_audio()
+        print(data)
         self.bit_extract(data, self.pca_samples, self.args)
         return self.gen_bits(self.pca_samples)

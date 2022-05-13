@@ -12,7 +12,8 @@ class Microphone:
                                   rate=sample_rate,
                                   input=True,
                                   frames_per_buffer=buffer_size)
+        self.stream.start_stream()
 
     def get_audio(self):
-        buf = self.stream.read(self.buffer_size)
+        buf = self.stream.read(self.buffer_size, exception_on_overflow=False)
         return np.fromstring(buf, dtype=np.float32)
