@@ -28,15 +28,13 @@ class TR_Bit_Extract_System():
         while (1):
             self.net.get_start()
             key = self.extract_context()
-            other_key = self.net.receive_auth_key(key)
-            np.save(pickle_folder + self.exp_name + "_mykey_" + str(self.count) + "_pickled.npy")
-            np.save(pickle_folder + self.exp_name + "_otherkey_" + str(self.count) + "_pickled.npy")
+            np.save(pickle_folder + self.exp_name + "_mykey_" + str(self.count) + "_pickled.npy", key)
             self.count += 1
 
     def bit_agreement_exp_host(self):
         while (1):
-            time.sleep(3)
+            time.sleep(15)
             self.net.send_start()
             key = self.extract_context()
-            time.sleep(1)
-            self.net.send_auth_token(key)
+            np.save(pickle_folder + self.exp_name + "_mykey_" + str(self.count) + "_pickled.npy", key)
+            self.count += 1
