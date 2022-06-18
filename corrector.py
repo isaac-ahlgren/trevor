@@ -49,7 +49,7 @@ class Reed_Solomon:
     
         g = self.RS.get_generator_poly()
 
-        for i in range(len(C.coeffs):
+        for i in range(len(C.coeffs)):
             C.coeffs[i] ^= random_coeffs[i]
 
         # Collect syndrome polynomial
