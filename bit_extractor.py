@@ -9,16 +9,16 @@ class Bit_Extractor:
         self.bins = bins
         self.microphone = Microphone(sample_rate, int(seconds*sample_rate))
     
-    def tr_bit_extract(self, data, vector_num, eig_num, bins):
+    def tr_bit_extract(self, data, vector_num, eig_num, bins, throw_samples):
         eig_vecs = np.zeros((eig_num, bins))
 
         vector_len = int(len(data) / vector_num)
         difference = len(data) % vector_num
         end = len(data) - difference
-
+ 
         data_matrix = np.array(np.split(data[:end], vector_num))
 
-        fft_data_matrix = np.abs(np.fft.rfft(data_matrix))
+        fft_data_matrix = np.abs(np.fft.rfft(data_matrix))[:,throw_samples:]
 
         fft_data_matrix  = self.bin_fft(fft_data_matrix, bins)
 
@@ -29,7 +29,7 @@ class Bit_Extractor:
         for i in range(eig_num):
             eig_vecs[i,:] = v[:,len(v) - 1 - i]
 
-        fixed_eig_vecs = self.fix_direction(eig_vecs)
+        fixed_eig_vecs = np.abs(eig_vecs)
 
         bits = self.gen_bits(fixed_eig_vecs)
 
@@ -82,5 +82,5 @@ class Bit_Extractor:
     def extract_key(self):
         data = self.microphone.get_audio()
         print(data) # check if the mic is actually on
-        bits = self.tr_bit_extract(data, self.vector_num, self.eig_num, self.bins)
+        bits = self.tr_bit_extract(data, self.vector_num, self.eig_num, self.bins, 5)
         return bits

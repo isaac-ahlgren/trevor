@@ -13,7 +13,11 @@ class Microphone:
                                   input=True,
                                   frames_per_buffer=buffer_size)
         self.stream.start_stream()
+        self.count = 0
 
     def get_audio(self):
         buf = self.stream.read(self.buffer_size, exception_on_overflow=False)
-        return np.fromstring(buf, dtype=np.float32)
+        decoded_buf = np.fromstring(buf, dtype=np.float32)
+        #np.save("./pickled/test_audio_" + str(self.count) + ".npy", decoded_buf)
+        #self.count += 1
+        return decoded_buf
