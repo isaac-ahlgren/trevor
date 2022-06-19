@@ -1,5 +1,6 @@
 from microphone import Microphone
 import numpy as np
+import ctypes
 
 class Bit_Extractor:
     def __init__(self, sample_rate, vector_num, eig_num, bins, seconds):
@@ -8,9 +9,29 @@ class Bit_Extractor:
         self.eig_num = eig_num
         self.bins = bins
         self.microphone = Microphone(sample_rate, int(seconds*sample_rate))
+        
+        self.eig_vecs = np.zeros(bins*eig_num, dtype=np.float32)
+        
+        # Custom Eigenvector decomposition algorithm
+        lib = ctypes.cdll.LoadLibrary("./tr_bit_extract.so")
+        alloc_args = lib.alloc_eig_args
+        alloc_args.restype = ctypes.c_voidp
+        alloc_args.argtypes = [ctypes.c_uint32,
+                               ctypes.c_uint32,
+                               ctypes.c_uint32,
+                               ctypes.c_float]
+
+        self.args = alloc_args(bins, eig_num, 10000, 0.001)
+
+        eig_decomp = lib.eig_decomp
+        eig_decomp.restype = None
+        eig_decomp.argtypes = [np.ctypeslib.ndpointer(ctypes.c_float, flags="C_CONTIGUOUS"),
+                               np.ctypeslib.ndpointer(ctypes.c_float, flags="C_CONTIGUOUS"),
+                               np.ctypeslib.ndpointer(ctypes.c_int32, flags="C_CONTIGUOUS"),
+                               ctypes.c_voidp]
+        self.eig_decomp = eig_decomp            
     
     def tr_bit_extract(self, data, vector_num, eig_num, bins, throw_samples):
-        eig_vecs = np.zeros((eig_num, bins))
 
         vector_len = int(len(data) / vector_num)
         difference = len(data) % vector_num
@@ -24,16 +45,22 @@ class Bit_Extractor:
 
         cov_matrix = np.cov(fft_data_matrix.T)
 
-        w, v = np.linalg.eigh(cov_matrix)
+        conv = np.zeros(self.eig_num, dtype=np.int32)
+        flat_cov = np.array(cov_matrix.flatten(), dtype=np.float32)
+        self.eig_decomp(flat_cov, self.eig_vecs, conv, self.args)
 
-        for i in range(eig_num):
-            eig_vecs[i,:] = v[:,len(v) - 1 - i]
+        #w, v = np.linalg.eigh(cov_matrix)
 
-        fixed_eig_vecs = np.abs(eig_vecs)
+        #for i in range(eig_num):
+        #    eig_vecs[i,:] = v[:,len(v) - 1 - i]
+
+        eig_vecs = np.array(np.split(self.eig_vecs, self.eig_num))
+
+        fixed_eig_vecs = self.fix_direction(eig_vecs)
 
         bits = self.gen_bits(fixed_eig_vecs)
 
-        return bits
+        return bits, conv
 
     def bin_fft(self, fft_data_matrix, bins):
         vec_len = len(fft_data_matrix[0,:])
@@ -82,5 +109,5 @@ class Bit_Extractor:
     def extract_key(self):
         data = self.microphone.get_audio()
         print(data) # check if the mic is actually on
-        bits = self.tr_bit_extract(data, self.vector_num, self.eig_num, self.bins, 5)
-        return bits
+        bits, conv = self.tr_bit_extract(data, self.vector_num, self.eig_num, self.bins, 10)
+        return bits, conv

@@ -25,6 +25,7 @@ class Reed_Solomon:
         return random_key_coeff
     
     def encode_message(self, random_bits):
+
         random_coeffs = self.get_random_coeffs(random_bits)
     
         g = self.RS.get_generator_poly()
@@ -49,7 +50,7 @@ class Reed_Solomon:
     
         g = self.RS.get_generator_poly()
 
-        for i in range(len(C.coeffs):
+        for i in range(len(C.coeffs)):
             C.coeffs[i] ^= random_coeffs[i]
 
         # Collect syndrome polynomial
@@ -59,14 +60,12 @@ class Reed_Solomon:
             sig = self.RS.berlecamp_alg(poly, syndromes)
         else:
             sig = 0
+            return C
 
-        if sig != 0:
-            s_r = self.RS.get_sigma_r(sig)
-            zeros = s_r.find_zeros(self.GF)
-            found_errors = self.RS.find_error_values(poly,zeros)
-            output = self.RS.correct_found_errors(C,zeros,found_errors)
-        else:
-            output = self.PA.div(C, g)
+        s_r = self.RS.get_sigma_r(sig)
+        zeros = s_r.find_zeros(self.GF)
+        found_errors = self.RS.find_error_values(poly,zeros)
+        output = self.RS.correct_found_errors(C,zeros,found_errors)
         output.resize()
 
         return output
