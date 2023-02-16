@@ -7,17 +7,40 @@ class Microphone:
         self.sample_rate = sample_rate
         self.pyaud = pyaudio.PyAudio()
         self.buffer_size = buffer_size
+        self.chunk_size = buffer_size
         self.stream = self.pyaud.open(format=self.format,
                                   channels=1,
                                   rate=sample_rate,
                                   input=True,
-                                  frames_per_buffer=buffer_size)
-        self.stream.start_stream()
+                                  frames_per_buffer=self.chunk_size,
+                                  stream_callback=self.get_callback())
+        self.chunks_per_buffer = int(buffer_size/self.chunk_size)
         self.count = 0
+        self.buffer_ready = False
+        self.ready_buffer = None
+        self.buffer = None
+
+    def get_callback(self):
+        def callback(in_data, frame_count, time_info, status):
+            self.ready_buffer = np.fromstring(in_data, dtype=np.float32)
+            self.buffer_ready = True
+            return (in_data, pyaudio.paContinue)
+        return callback
+
+    def start_stream(self):
+        self.stream.start_stream()
+
+    def stop_stream(self):
+        self.buffer_ready = False
+        self.stream.stop_stream()
 
     def get_audio(self):
-        buf = self.stream.read(self.buffer_size, exception_on_overflow=False)
-        decoded_buf = np.fromstring(buf, dtype=np.float32)
-        #np.save("./pickled/test_audio_" + str(self.count) + ".npy", decoded_buf)
-        #self.count += 1
-        return decoded_buf
+        while 1:
+            if self.buffer_ready:
+                break
+
+        self.buffer = self.ready_buffer
+        np.save("./pickled/adversary2_audio_" + str(self.count) + ".npy", self.buffer)
+        self.count += 1
+        self.buffer_ready = False
+        return self.buffer
