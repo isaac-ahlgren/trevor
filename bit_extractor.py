@@ -3,12 +3,12 @@ import numpy as np
 import ctypes
 
 class Bit_Extractor:
-    def __init__(self, sample_rate, vector_num, eig_num, bins, seconds):
+    def __init__(self, sample_rate, vector_num, eig_num, bins, seconds, audio_source_name):
         self.sample_rate = sample_rate
         self.vector_num = vector_num
         self.eig_num = eig_num
         self.bins = bins
-        self.microphone = Microphone(sample_rate, int(seconds*sample_rate))
+        self.microphone = Microphone(sample_rate, int(seconds*sample_rate), audio_source_name)
         
         self.eig_vecs = np.zeros(bins*eig_num, dtype=np.float32)
         
@@ -108,6 +108,6 @@ class Bit_Extractor:
 
     def extract_key(self):
         data = self.microphone.get_audio()
-        print(data) # check if the mic is actually on
+        #print(data) # check if the mic is actually on
         bits, conv = self.tr_bit_extract(data, self.vector_num, self.eig_num, self.bins, 10)
         return bits, conv

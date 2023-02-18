@@ -9,7 +9,7 @@ import numpy as np
 pickle_folder = "./pickled/"
 
 class TR_Bit_Extract_System():
-    def __init__(self, is_host, ip, other_ip, sample_rate, vector_num, eig_num, bins, seconds, exp_name, n, k):
+    def __init__(self, is_host, ip, other_ip, sample_rate, vector_num, eig_num, bins, seconds, exp_name, n, k, audio_source_name):
         self.ip = ip
         self.other_ip = other_ip
         self.sample_rate = sample_rate
@@ -17,8 +17,8 @@ class TR_Bit_Extract_System():
         self.eig_num = eig_num
         self.bins = bins
         self.seconds = seconds
-        self.net = Network(ip, other_ip, is_host)
-        self.be = Bit_Extractor(sample_rate, vector_num, eig_num, bins, seconds)
+#        self.net = Network(ip, other_ip, is_host)
+        self.be = Bit_Extractor(sample_rate, vector_num, eig_num, bins, seconds, audio_source_name)
         self.re = Reed_Solomon(n, k)
         self.exp_name = exp_name
         self.count = 0
@@ -42,7 +42,7 @@ class TR_Bit_Extract_System():
         print()
         print("Extracting Audio")
         key, conv = self.be.extract_key()
-        print("Generated key: " + str(key))
+#        print("Generated key: " + str(key))
         print()
         return key, conv
 
