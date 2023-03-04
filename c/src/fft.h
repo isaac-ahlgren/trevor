@@ -2,6 +2,8 @@
 #ifndef __FFT_H
 #define __FFT_H
 
+#include <stdint.h>
+
 typedef float real;
 typedef struct{real Re; real Im;} complex;
 

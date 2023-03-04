@@ -12,7 +12,7 @@ void matrix_vec_mult(float* mat, uint32_t dim_size, float* vec, float* new_vec);
 
 void print_matrix(float* mat, int columns, int rows) {
     for (int i = 0; i < columns*rows; i++) {
-        printf("%f ", mat[i]);
+        printf("%08.5f ", mat[i]);
         if ((i + 1) % columns == 0) {
             printf("\n");
         }
