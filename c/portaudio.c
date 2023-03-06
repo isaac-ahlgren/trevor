@@ -182,7 +182,7 @@ void playback(PaStream *playData) {
     }
 }
 
-int blocking_sample_audio() {
+int main() {
 
     int k;
     int err;

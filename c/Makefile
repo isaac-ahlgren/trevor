@@ -8,11 +8,12 @@ TARGET = tr_bit_extract.so
 
 CFILES = \
 	eig_vec_decomp.c \
-    portaudio.c
+    fft.c \
+    bitextract.c
 
 all: $(CFILES)
 	$(CC) $(CFLAGS) -o $(TARGET) $(CFILES)
-	mv $(TARGET) ..
+	cp $(TARGET) ..
 
 clean:
-	rm ../$(TARGET)
+	rm ../$(TARGET) ./$(TARGET)

@@ -39,6 +39,10 @@ class Bit_Extractor:
  
         data_matrix = np.array(np.split(data[:end], vector_num))
 
+        print("vector_num is " + str(vector_num))
+        print("shape of data is " + str(data.shape))
+        print("Shape of data_matrix is " + str(data_matrix.shape))
+
         fft_data_matrix = np.abs(np.fft.rfft(data_matrix))[:,throw_samples:]
 
         fft_data_matrix  = self.bin_fft(fft_data_matrix, bins)
@@ -95,9 +99,9 @@ class Bit_Extractor:
             if flat_vecs[i] > mean:
                 bits += "1"
                 if flat_vecs[i] > (max_comp + mean) / 2:
-                    bits += "1"
-                else:
                     bits += "0"
+                else:
+                    bits += "1"
             else:
                 bits += "0"
                 if flat_vecs[i] > (min_comp + mean) / 2:
